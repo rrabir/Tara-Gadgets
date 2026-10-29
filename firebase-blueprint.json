@@ -1,0 +1,110 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Catalog product with variants, specifications, and Bangladesh warranty terms.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 200 },
+        "slug": { "type": "string", "maxLength": 200 },
+        "brand": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "regularPrice": { "type": "number" },
+        "salePrice": { "type": "number" },
+        "sku": { "type": "string", "maxLength": 50 },
+        "stock": { "type": "number" },
+        "coverImage": { "type": "string" },
+        "status": { "type": "string", "enum": ["published", "draft", "archived"] },
+        "warranty": { "type": "string", "maxLength": 200 },
+        "salesCount": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "slug", "brand", "category", "regularPrice", "sku", "stock", "status"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order containing line items, Bangladesh delivery address, and COD fulfillment status.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderNumber": { "type": "string", "maxLength": 32 },
+        "customerId": { "type": "string" },
+        "isGuest": { "type": "boolean" },
+        "address": { "type": "object" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "shippingFee": { "type": "number" },
+        "discount": { "type": "number" },
+        "couponCode": { "type": "string" },
+        "total": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cash-on-delivery", "online-payment"] },
+        "paymentStatus": { "type": "string" },
+        "orderStatus": { "type": "string", "enum": ["new", "confirmed", "packing", "shipped", "delivered", "cancelled", "failed-delivery", "returned"] },
+        "courierStatus": { "type": "string" },
+        "courierName": { "type": "string" },
+        "courierTrackingId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["orderNumber", "address", "items", "subtotal", "shippingFee", "total", "paymentMethod", "orderStatus"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Global storefront branding, contact, delivery, and payment provider states.",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 100 },
+        "tagline": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 100 },
+        "facebookUrl": { "type": "string" },
+        "currency": { "type": "string" },
+        "currencySymbol": { "type": "string" },
+        "timezone": { "type": "string" },
+        "announcementBarText": { "type": "string", "maxLength": 300 },
+        "isAnnouncementBarActive": { "type": "boolean" },
+        "enableCod": { "type": "boolean" },
+        "sslcommerzStatus": { "type": "string" },
+        "bkashStatus": { "type": "string" }
+      },
+      "required": ["storeName", "email", "currency", "timezone"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Auditable log entry for privileged actions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userRole": { "type": "string" },
+        "action": { "type": "string" },
+        "entityType": { "type": "string" },
+        "entityId": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["timestamp", "action", "entityType", "details"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Public catalog products, read-only for public, writable by verified admins."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer orders, created by server/checkout, readable by owner or verified admin."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/StoreSettings" },
+      "description": "Store configuration, readable by all, writable only by store owner."
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Append-only administrative activity audit logs."
+    }
+  }
+}

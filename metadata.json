@@ -1,0 +1,6 @@
+{
+  "name": "Tara Gadgets BD - Premium Tech & Gadget Store",
+  "description": "Official online gadget store for Tara Gadgets BD with authenticated admin dashboard, dynamic catalog, cart, and Bangladesh delivery management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
